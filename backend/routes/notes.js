@@ -64,23 +64,40 @@ router.put(
   // [body('title','Pleas enter a valid title').isLength({min:3}),
   // body('description','description must be atleast 5 character long').isLength({min:5}),],
   async (req, res) => {
-    // create a new object
-    const newNote = {};
-    const {title,description,tag}=req.body;
-    if(title){newNote.title=title};
-    if(description){newNote.description=description};
-    if(tag){newNote.tag=tag};
+    try {
+      // create a new object
+      const newNote = {};
+      const { title, description, tag } = req.body;
+      if (title) {
+        newNote.title = title;
+      }
+      if (description) {
+        newNote.description = description;
+      }
+      if (tag) {
+        newNote.tag = tag;
+      }
 
-    // find the note to be updated
+      // find the note to be updated
 
-    let note = await Notes.findById(req.params.id);
-    if(!note){return res.status(404).send("Not Found")}
-// check loged user is same or not...
-    if(note.user && note.user.toString() !== req.user.id){
-      return res.status(401).send("Not Allowed");
+      let note = await Notes.findById(req.params.id);
+      if (!note) {
+        return res.status(404).send("Not Found");
+      }
+      // check loged user is same or not...
+      if (note.user && note.user.toString() !== req.user.id) {
+        return res.status(401).send("Not Allowed");
+      }
+      note = await Notes.findByIdAndUpdate(
+        req.params.id,
+        { $set: newNote },
+        { new: true }
+      );
+      res.json({ note });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send("internal notes.js server error");
     }
-    note = await Notes.findByIdAndUpdate(req.params.id,{$set: newNote}, {new:true})
-    res.json({note});
   }
 );
 
@@ -94,23 +111,34 @@ router.delete(
   // [body('title','Pleas enter a valid title').isLength({min:3}),
   // body('description','description must be atleast 5 character long').isLength({min:5}),],
   async (req, res) => {
-    // create a new object
-    const newNote = {};
-    const {title,description,tag}=req.body;
-    if(title){newNote.title=title};
-    if(description){newNote.description=description};
-    if(tag){newNote.tag=tag};
+   
+    try {
+      //userwant delete but same user check
 
-    // find the note to be updated
+      // create a new object
+      // const newNote = {};
+      // const {title,description,tag}=req.body;
+      // if(title){newNote.title=title};
+      // if(description){newNote.description=description};
+      // if(tag){newNote.tag=tag};
+      // find the note to be updated
 
-    let note = await Notes.findById(req.params.id);
-    if(!note){return res.status(404).send("Not Found")}
-// check loged user is same or not...
-    if(note.user && note.user.toString() !== req.user.id){
-      return res.status(401).send("Not Allowed");
+      //userwant delete but same user check
+      let note = await Notes.findById(req.params.id);
+      if (!note) {
+        return res.status(404).send("Not Found");
+      }
+      // check loged user is same or not...
+      // allowed deletion only if user own this note
+      if (note.user.toString() !== req.user.id) {
+        return res.status(401).send("Not Allowed");
+      }
+      note = await Notes.findByIdAndDelete(req.params.id);
+      res.json({ Success: "Note has been deleted", note: note });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send("internal notes.js server error");
     }
-    note = await Notes.findByIdAndUpdate(req.params.id,{$set: newNote}, {new:true})
-    res.json({note});
   }
 );
 
