@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
 
@@ -7,9 +7,9 @@ const Navbar = () => {
   // this use effect use for change the navbar focus color when is activa or not
   // {`nav-link ${location.pathname==="/about"? "active":""}`}  use this for class name 
   let location = useLocation();
-  useEffect(()=>{
-    console.log(location.pathname);
-  },[location]);
+  // useEffect(()=>{
+  //   console.log(location.pathname);
+  // },[location]);
   return (
     
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
