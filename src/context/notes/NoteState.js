@@ -54,9 +54,10 @@ const NoteState = (props) => {
         "auth-token":
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjczMWE1MTlkNmU0NmZhOGFlMzQ1NjI2In0sImlhdCI6MTczMTMyMDEwNH0.anoPpQ_C1E5Zyy_vhVJBbr2xAwAZ8mcbODlss_AEfeQ",
       },
-      body: JSON.stringify({ title, description, tag }),
+      body: JSON.stringify({ title, description, tag })
     });
-    // const json = respose.json();
+    const json = await respose.json();
+    console.log(json);
 
     console.log("Adding a new note");
     // client side add
@@ -119,7 +120,7 @@ const NoteState = (props) => {
   const editNote = async (id, title, description, tag) => {
     // api call
     const respose = await fetch(`${host}/api/notes/updatenote/${id}`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "auth-token":
@@ -127,17 +128,24 @@ const NoteState = (props) => {
       },
       body: JSON.stringify({ title, description, tag }),
     });
-    const json = respose.json();
+    const json = await respose.json();
+    console.log(json);
+
+    let newNotes = JSON.parse(JSON.stringify(notes))
 
     //logic to edit in client
-    for (let index = 0; index < notes.length; index++) {
-      const element = notes[index];
+    for (let index = 0; index < newNotes.length; index++) {
+      const element = newNotes[index];
       if (element._id === id) {
-        element.title = title;
-        element.description = description;
-        element.tag = tag;
+        newNotes[index].title = title;
+        newNotes[index].description = description;
+        newNotes[index].tag = tag;
+        break;
       }
+    
     }
+    console.log(newNotes);
+    setNotes(newNotes);
   };
 
   return (
