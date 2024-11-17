@@ -61,15 +61,7 @@ const NoteState = (props) => {
 
     console.log("Adding a new note");
     // client side add
-    const note = {
-      _id: "8jewiuct9847t93ctoht",
-      user: "0009",
-      title: title,
-      description: description,
-      tag: tag,
-      date: "2024-11-12T03:52:27.869Z",
-      __v: 0,
-    };
+    const note = json;
     setNotes(notes.concat(note));
   };
 
