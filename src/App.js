@@ -5,6 +5,8 @@ import Home from "./components/Home";
 import About from "./components/About";
 import NoteState from "./context/notes/NoteState";
 import Alert from "./components/Alert";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <Routes>
           <Route  path="/" element={<Home />} />
           <Route  path="/about" element={<About />} />
+          <Route  path="/login" element={<Login />} />
+          <Route  path="/signup" element={<Signup />} />
           {/* <Route exact path="page2" element={<Page2 />} />
           <Route exact path="page3" element={<Page3 />} /> */}
         </Routes>

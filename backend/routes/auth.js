@@ -27,15 +27,16 @@ router.post(
     }),
   ],
   async (req, res) => {
+    let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({success, errors: errors.array() });
     }
     try {
       //check whether the user with this email already exist
       let user = await User.findOne({ email: req.body.email });
       if (user) {
-        return res.status(400).json({ error: "same email id match" });
+        return res.status(400).json({success, error: "same email id match" });
       }
 
       //this is extra  // console.log(req.body);
@@ -64,7 +65,8 @@ router.post(
       //data store in authtoken
       const authtoken = jwt.sign(data, JWT_SCRET);
       // console.log(jwtData);
-      res.json({ authtoken });
+      success=true;
+      res.json({success, authtoken });
 
       // res.json(user);
       //data send es6 authtoken
@@ -100,16 +102,18 @@ router.post(
       let user = await User.findOne({ email });
       // email khoto hase to error aavshe
       if (!user) {
+        success = false;
         return res
           .status(400)
-          .json({ error: "please try to correct credencials" });
+          .json({success, error: "please try to correct credencials" });
       }
       // password ne compare karshe, encoded password sathe
       const passwordCompare = await bcrypt.compare(password, user.password);
       if (!passwordCompare) {
+        success = false;
         return res
           .status(400)
-          .json({ error: "please try to correct credencials" });
+          .json({success, error: "please try to correct credencials" });
       }
       const data = {
         user: {
@@ -117,7 +121,9 @@ router.post(
         },
       };
       const authtoken = jwt.sign(data, JWT_SCRET);
-      res.json({ authtoken });
+
+      success = true;
+      res.json({success, authtoken });
     } catch (error) {
       console.error(error.message);
       res.status(500).send("internal server  error occured");
