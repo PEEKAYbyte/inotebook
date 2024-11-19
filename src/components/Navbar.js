@@ -1,7 +1,13 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  let navigate = useNavigate();
+  const handleLogout=()=>{
+    localStorage.removeItem('token');
+    navigate('/login');
+
+  }
   // this use effect use for change the navbar focus color when is activa or not
   // {`nav-link ${location.pathname==="/about"? "active":""}`}  use this for class name
   let location = useLocation();
@@ -49,7 +55,7 @@ const Navbar = () => {
               </Link>
             </li>
           </ul>
-          <form className="d-flex" role="search">
+          {!localStorage.getItem('token')?<form className="d-flex">
             {/* <input
               className="form-control me-2"
               type="search"
@@ -58,7 +64,7 @@ const Navbar = () => {
             /> */}
             <Link className="btn btn-primary mx-2" to="/login" role="button"> Login </Link>
             <Link className="btn btn-primary mx-2" to="/signup" role="button"> SignUp </Link> 
-          </form>
+          </form>: <button onClick={handleLogout} className="btn btn-primary"> log out </button>}
         </div>
       </div>
     </nav>
